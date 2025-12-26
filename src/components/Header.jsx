@@ -1,6 +1,7 @@
 import React from 'react';
+import ThemeToggle from './ThemeToggle';
 
-const Header = ({ timeLeft, formatTimeFn }) => {
+const Header = ({ timeLeft, formatTimeFn, isDark, onThemeToggle, timerPulse }) => {
   return (
     <header className="exam-header">
       <div className="header-left">
@@ -12,9 +13,10 @@ const Header = ({ timeLeft, formatTimeFn }) => {
           <img src="https://via.placeholder.com/48" alt="Avatar" className="avatar" />
           <span>Welcome, John Doe</span>
         </div>
-        <div className="timer">
-          Time Left: <span className="time-display">{formatTimeFn(timeLeft)}</span>
+        <div className={`timer ${timerPulse ? 'pulse' : ''}`}>
+          <span className="time-display">{formatTimeFn(timeLeft)}</span>
         </div>
+        <ThemeToggle isDark={isDark} onToggle={onThemeToggle} />
       </div>
     </header>
   );

@@ -1,0 +1,229 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ThemeToggle from '../components/ThemeToggle';
+import Breadcrumb from '../components/Breadcrumb';
+import AnimatedCounter, { ProgressRing } from '../components/AnimatedCounter';
+import AccentColorPicker from '../components/AccentColorPicker';
+import { ProfileSkeleton } from '../components/Skeleton';
+import { useToast } from '../components/Toast';
+import useSound from '../hooks/useSound';
+import { BookIcon, TargetIcon, CheckCircleIcon } from '../components/Icons';
+
+const Profile = ({ isDark, onThemeToggle, onLogout, assessments }) => {
+    const navigate = useNavigate();
+    const toast = useToast();
+    const { playClick, playSuccess, isEnabled, setEnabled } = useSound();
+
+    // Loading state
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Settings states
+    const [soundEnabled, setSoundEnabled] = useState(isEnabled());
+    const [glassmorphism, setGlassmorphism] = useState(() => {
+        return localStorage.getItem('glassmorphism') === 'true';
+    });
+
+    useEffect(() => {
+        const timer = setTimeout(() => setIsLoading(false), 500);
+        return () => clearTimeout(timer);
+    }, []);
+
+    const handleLogout = () => {
+        playClick();
+        toast.info('Logging out...');
+        setTimeout(() => {
+            onLogout();
+            navigate('/login');
+        }, 500);
+    };
+
+    const handleSoundToggle = () => {
+        const newValue = !soundEnabled;
+        setSoundEnabled(newValue);
+        setEnabled(newValue);
+        if (newValue) {
+            playSuccess();
+            toast.success('Sound effects enabled');
+        } else {
+            toast.info('Sound effects disabled');
+        }
+    };
+
+    const handleGlassToggle = () => {
+        const newValue = !glassmorphism;
+        setGlassmorphism(newValue);
+        localStorage.setItem('glassmorphism', newValue.toString());
+        document.documentElement.setAttribute('data-glass', newValue ? 'true' : 'false');
+        playClick();
+        toast.success(newValue ? 'Glassmorphism enabled' : 'Glassmorphism disabled');
+    };
+
+    const studentInfo = {
+        name: "John Doe",
+        email: "john.doe@university.edu",
+        rollNumber: "STU2025001",
+        department: "Computer Science",
+        semester: "6th Semester",
+        batch: "2022-2026"
+    };
+
+    const totalTests = assessments.completed.length;
+    const avgScore = totalTests > 0
+        ? Math.round(assessments.completed.reduce((acc, test) => acc + test.percentage, 0) / totalTests)
+        : 0;
+
+    if (isLoading) {
+        return (
+            <div className="profile-page">
+                <ProfileSkeleton />
+            </div>
+        );
+    }
+
+    return (
+        <div className="profile-page">
+            {/* Breadcrumb */}
+            <Breadcrumb />
+
+            {/* Profile Header */}
+            <header className="dashboard-header">
+                <div className="header-nav">
+                    <button className="btn-back" onClick={() => { playClick(); navigate('/'); }}>
+                        ← Back to Dashboard
+                    </button>
+                    <h1>My Profile</h1>
+                </div>
+                <div className="header-actions">
+                    <button className="btn-logout-small" onClick={handleLogout}>
+                        Logout
+                    </button>
+                    <ThemeToggle isDark={isDark} onToggle={onThemeToggle} />
+                </div>
+            </header>
+
+            {/* Profile Card */}
+            <section className="profile-card">
+                <div className="profile-avatar-section">
+                    <img
+                        src="https://via.placeholder.com/120"
+                        alt="Profile"
+                        className="profile-avatar-large"
+                    />
+                    <div className="profile-name-section">
+                        <h2>{studentInfo.name}</h2>
+                        <p className="profile-email">{studentInfo.email}</p>
+                        <span className="profile-badge">{studentInfo.department}</span>
+                    </div>
+                </div>
+
+                <div className="profile-details">
+                    <div className="profile-detail-item">
+                        <span className="detail-label">Roll Number</span>
+                        <span className="detail-value">{studentInfo.rollNumber}</span>
+                    </div>
+                    <div className="profile-detail-item">
+                        <span className="detail-label">Semester</span>
+                        <span className="detail-value">{studentInfo.semester}</span>
+                    </div>
+                    <div className="profile-detail-item">
+                        <span className="detail-label">Batch</span>
+                        <span className="detail-value">{studentInfo.batch}</span>
+                    </div>
+                </div>
+            </section>
+
+            {/* Assessment Overview with Animated Stats */}
+            <section className="overview-section">
+                <h2 className="section-title">Assessment Overview</h2>
+                <div className="stats-grid">
+                    <div className="stat-card-large">
+                        <span className="stat-icon"><BookIcon size={24} /></span>
+                        <div className="stat-content">
+                            <AnimatedCounter
+                                end={assessments.upcoming.length}
+                                className="stat-number"
+                            />
+                            <span className="stat-label">Upcoming Tests</span>
+                        </div>
+                    </div>
+                    <div className="stat-card-large live">
+                        <span className="stat-icon"><TargetIcon size={24} /></span>
+                        <div className="stat-content">
+                            <AnimatedCounter
+                                end={assessments.live.length}
+                                className="stat-number"
+                            />
+                            <span className="stat-label">Live Now</span>
+                        </div>
+                    </div>
+                    <div className="stat-card-large">
+                        <span className="stat-icon"><CheckCircleIcon size={24} /></span>
+                        <div className="stat-content">
+                            <AnimatedCounter
+                                end={assessments.completed.length}
+                                className="stat-number"
+                            />
+                            <span className="stat-label">Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Settings Section */}
+            <section className="settings-section">
+                <h3>Preferences</h3>
+
+                <div className="setting-item">
+                    <div className="setting-info">
+                        <h4>Sound Effects</h4>
+                        <p>Play sounds for actions like selecting options and submitting</p>
+                    </div>
+                    <label className="toggle-switch">
+                        <input
+                            type="checkbox"
+                            checked={soundEnabled}
+                            onChange={handleSoundToggle}
+                        />
+                        <span className="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div className="setting-item">
+                    <div className="setting-info">
+                        <h4>Glassmorphism</h4>
+                        <p>Enable blur effects for cards and panels</p>
+                    </div>
+                    <label className="toggle-switch">
+                        <input
+                            type="checkbox"
+                            checked={glassmorphism}
+                            onChange={handleGlassToggle}
+                        />
+                        <span className="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <AccentColorPicker />
+            </section>
+
+            {/* Recent Assessments */}
+            <section className="performance-section">
+                <h2 className="section-title">Recent Assessments</h2>
+                <div className="performance-list">
+                    {assessments.completed.map((test) => (
+                        <div key={test.id} className="performance-item">
+                            <div className="performance-info">
+                                <span className="subject-tag small">{test.subject}</span>
+                                <h4>{test.title}</h4>
+                                <p>{test.date}</p>
+                            </div>
+                            <span className="status-badge completed">Completed</span>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        </div>
+    );
+};
+
+export default Profile;
