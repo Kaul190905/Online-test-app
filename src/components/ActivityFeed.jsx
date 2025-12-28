@@ -61,13 +61,13 @@ const ActivityFeed = ({ activities }) => {
             {
                 type: 'test_completed',
                 title: 'Completed Mathematics Quiz',
-                description: 'Scored 85% on Unit 3 Assessment',
+                description: 'Unit 3 Assessment submitted successfully',
                 timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
             },
             {
-                type: 'score_received',
-                title: 'Results Published',
-                description: 'Physics Mid-term results are out',
+                type: 'test_completed',
+                title: 'Test Submitted',
+                description: 'Physics Mid-term submitted for review',
                 timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString()
             },
             {

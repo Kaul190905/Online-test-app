@@ -7,7 +7,7 @@ import AccentColorPicker from '../components/AccentColorPicker';
 import { ProfileSkeleton } from '../components/Skeleton';
 import { useToast } from '../components/Toast';
 import useSound from '../hooks/useSound';
-import { BookIcon, TargetIcon, CheckCircleIcon } from '../components/Icons';
+import { BookIcon, TargetIcon, CheckCircleIcon, StarIcon } from '../components/Icons';
 
 const Profile = ({ isDark, onThemeToggle, onLogout, assessments }) => {
     const navigate = useNavigate();
@@ -71,6 +71,32 @@ const Profile = ({ isDark, onThemeToggle, onLogout, assessments }) => {
     const avgScore = totalTests > 0
         ? Math.round(assessments.completed.reduce((acc, test) => acc + test.percentage, 0) / totalTests)
         : 0;
+
+    // Calculate strongest subject (field with highest average score)
+    const getStrongestSubject = () => {
+        if (assessments.completed.length === 0) return { name: 'N/A', avgScore: 0 };
+
+        const subjectScores = {};
+        assessments.completed.forEach(test => {
+            if (!subjectScores[test.subject]) {
+                subjectScores[test.subject] = { total: 0, count: 0 };
+            }
+            subjectScores[test.subject].total += test.percentage;
+            subjectScores[test.subject].count += 1;
+        });
+
+        let strongest = { name: 'N/A', avgScore: 0 };
+        Object.entries(subjectScores).forEach(([subject, data]) => {
+            const avg = data.total / data.count;
+            if (avg > strongest.avgScore) {
+                strongest = { name: subject, avgScore: Math.round(avg) };
+            }
+        });
+
+        return strongest;
+    };
+
+    const strongestSubject = getStrongestSubject();
 
     if (isLoading) {
         return (
@@ -164,6 +190,13 @@ const Profile = ({ isDark, onThemeToggle, onLogout, assessments }) => {
                                 className="stat-number"
                             />
                             <span className="stat-label">Completed</span>
+                        </div>
+                    </div>
+                    <div className="stat-card-large strongest">
+                        <span className="stat-icon star"><StarIcon size={24} /></span>
+                        <div className="stat-content">
+                            <span className="stat-subject-name">{strongestSubject.name}</span>
+                            <span className="stat-label">Strongest Field</span>
                         </div>
                     </div>
                 </div>

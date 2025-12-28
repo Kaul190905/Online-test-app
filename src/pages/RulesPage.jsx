@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import { ClipboardIcon } from '../components/Icons';
 
 const RulesPage = ({ isDark, onThemeToggle, currentTest, onConfirmStart }) => {
     const navigate = useNavigate();
@@ -57,9 +58,9 @@ const RulesPage = ({ isDark, onThemeToggle, currentTest, onConfirmStart }) => {
                     <span className="subject-tag">{currentTest?.subject}</span>
                 </div>
 
-                {/* Split Layout: Instructions Left, Actions Right */}
+                {/* Split Layout */}
                 <div className="rules-split-layout">
-                    {/* Left Side - Instructions */}
+                    {/* Left Side - Rules */}
                     <div className="rules-left-panel">
                         <div className="rules-card">
                             <h3>Examination Rules & Regulations</h3>
@@ -93,14 +94,15 @@ const RulesPage = ({ isDark, onThemeToggle, currentTest, onConfirmStart }) => {
                         </div>
                     </div>
 
-                    {/* Right Side - Action Buttons */}
+                    {/* Right Side - Action Card */}
                     <div className="rules-right-panel">
                         <div className="action-card">
-                            <div className="action-icon">📋</div>
+                            <div className="action-icon-box">
+                                <ClipboardIcon size={32} />
+                            </div>
                             <h3>Ready to Begin?</h3>
                             <p>Make sure you have read all the instructions and are ready to start.</p>
-
-                            <div className="action-buttons">
+                            <div className="action-buttons-horizontal">
                                 <button
                                     className="btn-start-test"
                                     onClick={handleStartTest}

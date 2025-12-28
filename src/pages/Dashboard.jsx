@@ -12,7 +12,7 @@ import MobileSidebar, { HamburgerButton } from '../components/MobileSidebar';
 import { DashboardSkeleton } from '../components/Skeleton';
 import { useToast } from '../components/Toast';
 import useSound from '../hooks/useSound';
-import { BookIcon, TargetIcon, CheckCircleIcon, ChartIcon } from '../components/Icons';
+import { BookIcon, TargetIcon, CheckCircleIcon, ChartIcon, StarIcon } from '../components/Icons';
 
 const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }) => {
     const navigate = useNavigate();
@@ -143,11 +143,37 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
         ? Math.round(assessments.completed.reduce((acc, test) => acc + test.percentage, 0) / totalTests)
         : 0;
 
+    // Calculate strongest subject (subject with highest average score)
+    const getStrongestSubject = () => {
+        if (assessments.completed.length === 0) return { name: 'N/A', score: 0 };
+
+        const subjectScores = {};
+        assessments.completed.forEach(test => {
+            if (!subjectScores[test.subject]) {
+                subjectScores[test.subject] = { total: 0, count: 0 };
+            }
+            subjectScores[test.subject].total += test.percentage;
+            subjectScores[test.subject].count += 1;
+        });
+
+        let strongest = { name: 'N/A', avgScore: 0 };
+        Object.entries(subjectScores).forEach(([subject, data]) => {
+            const avg = data.total / data.count;
+            if (avg > strongest.avgScore) {
+                strongest = { name: subject, avgScore: Math.round(avg) };
+            }
+        });
+
+        return strongest;
+    };
+
+    const strongestSubject = getStrongestSubject();
+
     // Generate activities from completed tests
     const activities = assessments.completed.slice(0, 4).map((test, index) => ({
-        type: index === 0 ? 'test_completed' : 'score_received',
-        title: index === 0 ? `Completed ${test.title}` : 'Results Published',
-        description: `Scored ${test.percentage}% on ${test.subject}`,
+        type: 'test_completed',
+        title: `Completed ${test.title}`,
+        description: `Submitted on ${test.date}`,
         timestamp: new Date(Date.now() - (index + 1) * 24 * 60 * 60 * 1000).toISOString()
     }));
 
@@ -198,8 +224,8 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                         <span className="stat-label">Upcoming Tests</span>
                     </div>
                 </div>
-                <div className="enhanced-stat-card">
-                    <div className="stat-icon-wrapper success"><TargetIcon size={24} /></div>
+                <div className="enhanced-stat-card live">
+                    <div className="stat-icon-wrapper danger"><TargetIcon size={24} /></div>
                     <div className="stat-info">
                         <AnimatedCounter
                             end={assessments.live.length}
@@ -216,6 +242,13 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                             className="stat-number"
                         />
                         <span className="stat-label">Completed</span>
+                    </div>
+                </div>
+                <div className="enhanced-stat-card strongest-subject-card">
+                    <div className="stat-icon-wrapper star"><StarIcon size={24} /></div>
+                    <div className="stat-info">
+                        <span className="stat-subject-name">{strongestSubject.name}</span>
+                        <span className="stat-label">Strongest Field</span>
                     </div>
                 </div>
             </div>
@@ -236,6 +269,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                                 </div>
                                 <h3>{test.title}</h3>
                                 <p className="instructor">By {test.instructor}</p>
+                                <p className="test-duration">Duration: {test.duration}</p>
                                 <button
                                     className="btn-start"
                                     onClick={() => handleStartTest(test)}
@@ -287,6 +321,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                                             <h3>{test.title}</h3>
                                             <p className="instructor">By {test.instructor}</p>
                                             <p className="scheduled-date">Scheduled: {test.date}</p>
+                                            <p className="test-duration">Duration: {test.duration}</p>
                                         </div>
                                     ))}
                                 </div>
