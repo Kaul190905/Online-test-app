@@ -272,9 +272,8 @@ const TestPage = ({ isDark, onThemeToggle, currentTest, onCompleteTest }) => {
                                 {Array.from({ length: questions.length }, (_, i) => {
                                     let status = '';
                                     if (!visited[i]) status = 'not-visited';
-                                    else if (answers[i] !== null && marked[i]) status = 'answered-marked';
-                                    else if (answers[i] !== null) status = 'answered';
                                     else if (marked[i]) status = 'marked';
+                                    else if (answers[i] !== null) status = 'answered';
                                     else status = 'not-answered';
 
                                     return (

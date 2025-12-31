@@ -6,7 +6,7 @@ const Header = ({ timeLeft, formatTimeFn, isDark, onThemeToggle, timerPulse }) =
     <header className="exam-header">
       <div className="header-left">
         <h1>Java Programming - Final Test</h1>
-        <p>Assigned by: Mr. Alex Smith | Duration: 120 Minutes</p>
+        <p>Assigned by: Mr. Alex Smith |Duration: 120 Minutes</p>
       </div>
       <div className="header-right">
         <div className="student-info">
