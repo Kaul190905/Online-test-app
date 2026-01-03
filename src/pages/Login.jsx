@@ -55,7 +55,7 @@ const Login = ({ isDark, onThemeToggle, onLogin }) => {
 
                 {/* Logo/Title */}
                 <div className="login-header">
-                    <img src="/logo.jpg" alt="Gradeflow" className="login-logo-img" />
+                    <img src="/logo.png" alt="Gradeflow" className="login-logo-img" />
                     <p>Sign in to continue</p>
                 </div>
 
