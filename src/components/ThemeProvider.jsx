@@ -16,24 +16,6 @@ const ACCENT_COLORS = {
         primary: '#3b82f6',
         primaryLight: '#93c5fd',
         primaryDark: '#1d4ed8'
-    },
-    green: {
-        name: 'Emerald',
-        primary: '#10b981',
-        primaryLight: '#6ee7b7',
-        primaryDark: '#059669'
-    },
-    rose: {
-        name: 'Rose',
-        primary: '#f43f5e',
-        primaryLight: '#fda4af',
-        primaryDark: '#e11d48'
-    },
-    orange: {
-        name: 'Sunset',
-        primary: '#f97316',
-        primaryLight: '#fdba74',
-        primaryDark: '#ea580c'
     }
 };
 

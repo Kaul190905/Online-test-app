@@ -8,6 +8,8 @@ export const assessments = {
             instructor: "Dr. Sarah Johnson",
             date: "Dec 28, 2024",
             time: "10:00 AM",
+            startTime: "10:00 AM",
+            endTime: "11:30 AM",
             duration: "90 mins",
             questions: 30,
             marks: 60
@@ -19,6 +21,8 @@ export const assessments = {
             instructor: "Prof. Michael Chen",
             date: "Dec 30, 2024",
             time: "2:00 PM",
+            startTime: "2:00 PM",
+            endTime: "2:45 PM",
             duration: "45 mins",
             questions: 20,
             marks: 40
@@ -30,6 +34,8 @@ export const assessments = {
             instructor: "Dr. Emily Brown",
             date: "Jan 02, 2025",
             time: "11:00 AM",
+            startTime: "11:00 AM",
+            endTime: "12:00 PM",
             duration: "60 mins",
             questions: 25,
             marks: 50
@@ -41,6 +47,8 @@ export const assessments = {
             instructor: "Mr. Alex Smith",
             date: "Jan 05, 2025",
             time: "9:00 AM",
+            startTime: "9:00 AM",
+            endTime: "9:45 AM",
             duration: "45 mins",
             questions: 25,
             marks: 50
@@ -52,6 +60,8 @@ export const assessments = {
             instructor: "Prof. Michael Chen",
             date: "Jan 08, 2025",
             time: "3:00 PM",
+            startTime: "3:00 PM",
+            endTime: "4:00 PM",
             duration: "60 mins",
             questions: 30,
             marks: 60
@@ -63,6 +73,8 @@ export const assessments = {
             instructor: "Ms. Lisa Wang",
             date: "Jan 10, 2025",
             time: "10:00 AM",
+            startTime: "10:00 AM",
+            endTime: "11:15 AM",
             duration: "75 mins",
             questions: 35,
             marks: 70
@@ -74,6 +86,7 @@ export const assessments = {
             title: "Java Programming - Final Test",
             subject: "Java",
             instructor: "Mr. Alex Smith",
+            startTime: "12:30 PM",
             endTime: "2:30 PM",
             duration: "120 mins",
             questions: 20,
@@ -158,6 +171,32 @@ export const assessments = {
             totalMarks: 50,
             percentage: 84,
             status: "passed"
+        }
+    ],
+    missed: [
+        {
+            id: 15,
+            title: "Computer Networks - Quiz 1",
+            subject: "Networks",
+            instructor: "Dr. James Wilson",
+            date: "Dec 20, 2024",
+            startTime: "10:00 AM",
+            endTime: "11:00 AM",
+            duration: "60 mins",
+            questions: 25,
+            marks: 50
+        },
+        {
+            id: 16,
+            title: "Data Structures - Pop Quiz",
+            subject: "Data Structures",
+            instructor: "Dr. Sarah Johnson",
+            date: "Dec 22, 2024",
+            startTime: "2:00 PM",
+            endTime: "2:30 PM",
+            duration: "30 mins",
+            questions: 15,
+            marks: 30
         }
     ]
 };

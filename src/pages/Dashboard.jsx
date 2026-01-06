@@ -28,6 +28,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
     // State for expanded subject groups
     const [expandedUpcoming, setExpandedUpcoming] = useState(null);
     const [expandedCompleted, setExpandedCompleted] = useState(null);
+    const [expandedMissed, setExpandedMissed] = useState(null);
 
     // State for feedback modal
     const [showFeedback, setShowFeedback] = useState(false);
@@ -61,6 +62,11 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
     const toggleCompleted = (subject) => {
         playClick();
         setExpandedCompleted(prev => prev === subject ? null : subject);
+    };
+
+    const toggleMissed = (subject) => {
+        playClick();
+        setExpandedMissed(prev => prev === subject ? null : subject);
     };
 
     const handleViewFeedback = (test, e) => {
@@ -136,6 +142,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
     // Group assessments by subject
     const groupedUpcoming = groupBySubject(assessments.upcoming);
     const groupedCompleted = groupBySubject(assessments.completed);
+    const groupedMissed = assessments.missed ? groupBySubject(assessments.missed) : {};
 
     // Calculate stats
     const totalTests = assessments.completed.length;
@@ -269,6 +276,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                                 </div>
                                 <h3>{test.title}</h3>
                                 <p className="instructor">By {test.instructor}</p>
+                                <p className="test-timing">Available: {test.startTime} - {test.endTime}</p>
                                 <p className="test-duration">Duration: {test.duration}</p>
                                 <button
                                     className="btn-start"
@@ -285,9 +293,6 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
             {/* Dashboard Widgets Grid */}
             <div className="dashboard-widgets">
                 <div className="widget-column">
-                    {/* Performance Graph */}
-                    <PerformanceGraph data={assessments.completed} />
-
                     {/* Upcoming Assessments - Topic Boxes */}
                     <section className="assessment-section">
                         <h2 className="section-title">Upcoming Assessments</h2>
@@ -321,6 +326,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                                             <h3>{test.title}</h3>
                                             <p className="instructor">By {test.instructor}</p>
                                             <p className="scheduled-date">Scheduled: {test.date}</p>
+                                            <p className="test-timing">Live: {test.startTime} - {test.endTime}</p>
                                             <p className="test-duration">Duration: {test.duration}</p>
                                         </div>
                                     ))}
@@ -378,6 +384,53 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                             </div>
                         )}
                     </section>
+
+                    {/* Missed Assessments - Topic Boxes */}
+                    {assessments.missed && assessments.missed.length > 0 && (
+                        <section className="assessment-section">
+                            <h2 className="section-title missed-title">Missed Assessments</h2>
+                            <div className="topic-boxes-grid">
+                                {Object.entries(groupedMissed).map(([subject, tests]) => (
+                                    <div
+                                        key={subject}
+                                        className={`topic-box missed ${expandedMissed === subject ? 'active' : ''}`}
+                                        onClick={() => toggleMissed(subject)}
+                                    >
+                                        <span className="topic-name">{subject}</span>
+                                        <span className="topic-count">{tests.length}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Expanded Content */}
+                            {expandedMissed && groupedMissed[expandedMissed] && (
+                                <div className="expanded-content missed-content">
+                                    <div className="expanded-header">
+                                        <h3>{expandedMissed}</h3>
+                                        <button className="btn-close" onClick={() => setExpandedMissed(null)}>✕</button>
+                                    </div>
+                                    <div className="assessment-grid">
+                                        {groupedMissed[expandedMissed].map((test) => (
+                                            <div key={test.id} className="assessment-card missed-card">
+                                                <div className="card-header">
+                                                    <span className="subject-tag">{test.subject}</span>
+                                                    <span className="status-badge missed">Missed</span>
+                                                </div>
+                                                <h3>{test.title}</h3>
+                                                <p className="instructor">By {test.instructor}</p>
+                                                <p className="scheduled-date">Was scheduled: {test.date}</p>
+                                                <p className="test-timing missed-timing">Was available: {test.startTime} - {test.endTime}</p>
+                                                <p className="test-duration">Duration: {test.duration}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </section>
+                    )}
+
+                    {/* Performance Graph - After Missed Assessments */}
+                    <PerformanceGraph data={assessments.completed} />
                 </div>
 
                 {/* Right Column - Calendar and Activity */}

@@ -238,23 +238,6 @@ const Profile = ({ isDark, onThemeToggle, onLogout, assessments }) => {
 
                 <AccentColorPicker />
             </section>
-
-            {/* Recent Assessments */}
-            <section className="performance-section">
-                <h2 className="section-title">Recent Assessments</h2>
-                <div className="performance-list">
-                    {assessments.completed.map((test) => (
-                        <div key={test.id} className="performance-item">
-                            <div className="performance-info">
-                                <span className="subject-tag small">{test.subject}</span>
-                                <h4>{test.title}</h4>
-                                <p>{test.date}</p>
-                            </div>
-                            <span className="status-badge completed">Completed</span>
-                        </div>
-                    ))}
-                </div>
-            </section>
         </div>
     );
 };

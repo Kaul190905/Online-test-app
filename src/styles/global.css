@@ -2343,6 +2343,42 @@ button.btn-submit.btn-submit-small {
     border: 1px solid var(--success);
 }
 
+.status-badge.missed {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.topic-box.missed {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.topic-box.missed:hover,
+.topic-box.missed.active {
+    border-color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.topic-box.missed .topic-count {
+    background: var(--danger);
+}
+
+.missed-title {
+    color: var(--danger);
+}
+
+.missed-card {
+    border-left: 3px solid var(--danger);
+}
+
+.missed-timing {
+    color: var(--danger) !important;
+}
+
+.missed-content {
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
 .scheduled-date {
     font-size: 0.85rem;
     color: var(--text-secondary);
@@ -2355,6 +2391,16 @@ button.btn-submit.btn-submit-small {
     color: var(--primary);
     margin: 6px 0 0 0;
     font-weight: 500;
+}
+
+.test-timing {
+    font-size: 0.85rem;
+    color: var(--success);
+    margin: 6px 0 0 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 /* ============================================
@@ -2781,6 +2827,43 @@ button.btn-submit.btn-submit-small {
 .form-group input::placeholder {
     color: var(--text-secondary);
     opacity: 0.7;
+}
+
+/* Password Input with Toggle */
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 48px;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+    color: var(--text);
+    background: var(--border-light);
+}
+
+.password-toggle-btn svg {
+    width: 20px;
+    height: 20px;
 }
 
 .login-error {
