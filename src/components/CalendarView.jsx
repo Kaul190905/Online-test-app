@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 const CalendarView = ({ events = [], onEventClick }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedEvents, setSelectedEvents] = useState([]);
 
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -52,6 +54,27 @@ const CalendarView = ({ events = [], onEventClick }) => {
         setCurrentDate(new Date(year, month + 1, 1));
     };
 
+    const handleDayClick = (day, dayEvents) => {
+        if (dayEvents.length > 0) {
+            const clickedDate = new Date(year, month, day);
+            setSelectedDate(clickedDate);
+            setSelectedEvents(dayEvents);
+            if (onEventClick) {
+                onEventClick(dayEvents);
+            }
+        }
+    };
+
+    const closePopup = () => {
+        setSelectedDate(null);
+        setSelectedEvents([]);
+    };
+
+    const formatSelectedDate = () => {
+        if (!selectedDate) return '';
+        return `${months[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}`;
+    };
+
     // Generate calendar days
     const calendarDays = [];
 
@@ -64,20 +87,17 @@ const CalendarView = ({ events = [], onEventClick }) => {
     for (let day = 1; day <= daysInMonth; day++) {
         const dayEvents = getEventsForDay(day);
         const hasEvents = dayEvents.length > 0;
+        const eventCount = dayEvents.length;
 
         calendarDays.push(
             <div
                 key={day}
                 className={`calendar-day ${isToday(day) ? 'today' : ''} ${hasEvents ? 'has-events' : ''}`}
-                onClick={() => hasEvents && onEventClick && onEventClick(dayEvents)}
+                onClick={() => handleDayClick(day, dayEvents)}
             >
                 <span className="day-number">{day}</span>
                 {hasEvents && (
-                    <div className="event-dots">
-                        {dayEvents.slice(0, 3).map((_, i) => (
-                            <span key={i} className="event-dot"></span>
-                        ))}
-                    </div>
+                    <span className="event-count-badge">{eventCount}</span>
                 )}
             </div>
         );
@@ -101,23 +121,36 @@ const CalendarView = ({ events = [], onEventClick }) => {
                 {calendarDays}
             </div>
 
-            {/* Upcoming events list */}
-            {events.length > 0 && (
-                <div className="upcoming-events">
-                    <h4>Upcoming Tests</h4>
-                    <div className="events-list">
-                        {events.slice(0, 3).map((event, index) => (
-                            <div key={index} className="event-item">
-                                <div className="event-date">
-                                    <span className="event-day">{new Date(event.date).getDate()}</span>
-                                    <span className="event-month">{months[new Date(event.date).getMonth()]?.substring(0, 3)}</span>
+            {/* Assessment Details Popup Modal */}
+            {selectedDate && selectedEvents.length > 0 && (
+                <div className="calendar-popup-overlay" onClick={closePopup}>
+                    <div className="calendar-popup-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="popup-header">
+                            <h3>Assessments on {formatSelectedDate()}</h3>
+                            <button className="popup-close-btn" onClick={closePopup}>✕</button>
+                        </div>
+                        <div className="popup-content">
+                            {selectedEvents.map((event, index) => (
+                                <div key={index} className="popup-assessment-card">
+                                    <div className="popup-card-header">
+                                        <span className="subject-tag">{event.subject}</span>
+                                        <span className="status-badge upcoming">Upcoming</span>
+                                    </div>
+                                    <h4>{event.title}</h4>
+                                    <p className="popup-instructor">By {event.instructor}</p>
+                                    <div className="popup-details">
+                                        <p className="popup-timing">
+                                            <span className="detail-icon">🕐</span>
+                                            {event.startTime} - {event.endTime}
+                                        </p>
+                                        <p className="popup-duration">
+                                            <span className="detail-icon">⏱️</span>
+                                            Duration: {event.duration}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="event-info">
-                                    <span className="event-title">{event.title}</span>
-                                    <span className="event-subject">{event.subject}</span>
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
@@ -126,3 +159,4 @@ const CalendarView = ({ events = [], onEventClick }) => {
 };
 
 export default CalendarView;
+

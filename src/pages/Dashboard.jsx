@@ -86,6 +86,15 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
         navigate('/login');
     };
 
+    // Scroll to section function
+    const scrollToSection = (sectionId) => {
+        playClick();
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     // Generate recommendations based on score
     const getRecommendations = (test) => {
         const percentage = test.percentage;
@@ -221,7 +230,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
 
             {/* Enhanced Stats Grid */}
             <div className="enhanced-stats-grid">
-                <div className="enhanced-stat-card">
+                <div className="enhanced-stat-card clickable" onClick={() => scrollToSection('calendar-section')}>
                     <div className="stat-icon-wrapper primary"><BookIcon size={24} /></div>
                     <div className="stat-info">
                         <AnimatedCounter
@@ -231,7 +240,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                         <span className="stat-label">Upcoming Tests</span>
                     </div>
                 </div>
-                <div className="enhanced-stat-card live">
+                <div className="enhanced-stat-card live clickable" onClick={() => scrollToSection('live-section')}>
                     <div className="stat-icon-wrapper danger"><TargetIcon size={24} /></div>
                     <div className="stat-info">
                         <AnimatedCounter
@@ -241,7 +250,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                         <span className="stat-label">Live Now</span>
                     </div>
                 </div>
-                <div className="enhanced-stat-card">
+                <div className="enhanced-stat-card clickable" onClick={() => scrollToSection('completed-section')}>
                     <div className="stat-icon-wrapper warning"><CheckCircleIcon size={24} /></div>
                     <div className="stat-info">
                         <AnimatedCounter
@@ -251,7 +260,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                         <span className="stat-label">Completed</span>
                     </div>
                 </div>
-                <div className="enhanced-stat-card strongest-subject-card">
+                <div className="enhanced-stat-card strongest-subject-card clickable" onClick={() => scrollToSection('performance-section')}>
                     <div className="stat-icon-wrapper star"><StarIcon size={24} /></div>
                     <div className="stat-info">
                         <span className="stat-subject-name">{strongestSubject.name}</span>
@@ -262,7 +271,7 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
 
             {/* Live Assessments */}
             {assessments.live.length > 0 && (
-                <section className="assessment-section">
+                <section id="live-section" className="assessment-section">
                     <h2 className="section-title">
                         <span className="live-dot"></span>
                         Live Assessments
@@ -293,50 +302,8 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
             {/* Dashboard Widgets Grid */}
             <div className="dashboard-widgets">
                 <div className="widget-column">
-                    {/* Upcoming Assessments - Topic Boxes */}
-                    <section className="assessment-section">
-                        <h2 className="section-title">Upcoming Assessments</h2>
-                        <div className="topic-boxes-grid">
-                            {Object.entries(groupedUpcoming).map(([subject, tests]) => (
-                                <div
-                                    key={subject}
-                                    className={`topic-box ${expandedUpcoming === subject ? 'active' : ''}`}
-                                    onClick={() => toggleUpcoming(subject)}
-                                >
-                                    <span className="topic-name">{subject}</span>
-                                    <span className="topic-count">{tests.length}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Expanded Content */}
-                        {expandedUpcoming && groupedUpcoming[expandedUpcoming] && (
-                            <div className="expanded-content">
-                                <div className="expanded-header">
-                                    <h3>{expandedUpcoming}</h3>
-                                    <button className="btn-close" onClick={() => setExpandedUpcoming(null)}>✕</button>
-                                </div>
-                                <div className="assessment-grid">
-                                    {groupedUpcoming[expandedUpcoming].map((test) => (
-                                        <div key={test.id} className="assessment-card">
-                                            <div className="card-header">
-                                                <span className="subject-tag">{test.subject}</span>
-                                                <span className="status-badge upcoming">Upcoming</span>
-                                            </div>
-                                            <h3>{test.title}</h3>
-                                            <p className="instructor">By {test.instructor}</p>
-                                            <p className="scheduled-date">Scheduled: {test.date}</p>
-                                            <p className="test-timing">Live: {test.startTime} - {test.endTime}</p>
-                                            <p className="test-duration">Duration: {test.duration}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </section>
-
                     {/* Completed Assessments - Topic Boxes */}
-                    <section className="assessment-section">
+                    <section id="completed-section" className="assessment-section">
                         <h2 className="section-title">Completed Assessments</h2>
                         <div className="topic-boxes-grid">
                             {Object.entries(groupedCompleted).map(([subject, tests]) => (
@@ -430,11 +397,13 @@ const Dashboard = ({ isDark, onThemeToggle, assessments, onStartTest, onLogout }
                     )}
 
                     {/* Performance Graph - After Missed Assessments */}
-                    <PerformanceGraph data={assessments.completed} />
+                    <div id="performance-section">
+                        <PerformanceGraph data={assessments.completed} />
+                    </div>
                 </div>
 
                 {/* Right Column - Calendar and Activity */}
-                <div className="widget-column">
+                <div id="calendar-section" className="widget-column">
                     <CalendarView events={assessments.upcoming} />
                     <ActivityFeed activities={activities} />
                 </div>
