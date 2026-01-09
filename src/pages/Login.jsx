@@ -59,12 +59,22 @@ const Login = ({ isDark, onThemeToggle, onLogin }) => {
 
     return (
         <div className="login-page">
-            {/* Decorative Background Elements */}
+            {/* Decorative Background Elements - Math Symbols */}
             <div className="login-bg-decoration">
-                <div className="bg-blob blob-1"></div>
-                <div className="bg-blob blob-2"></div>
-                <div className="bg-blob blob-3"></div>
-                <div className="bg-blob blob-4"></div>
+                <span className="math-symbol symbol-1">π</span>
+                <span className="math-symbol symbol-2">∑</span>
+                <span className="math-symbol symbol-3">√</span>
+                <span className="math-symbol symbol-4">∫</span>
+                <span className="math-symbol symbol-5">∞</span>
+                <span className="math-symbol symbol-6">÷</span>
+                <span className="math-symbol symbol-7">×</span>
+                <span className="math-symbol symbol-8">+</span>
+                <span className="math-symbol symbol-9">=</span>
+                <span className="math-symbol symbol-10">%</span>
+                <span className="math-symbol symbol-11">42</span>
+                <span className="math-symbol symbol-12">7</span>
+                <span className="math-symbol symbol-13">∆</span>
+                <span className="math-symbol symbol-14">θ</span>
             </div>
 
             <div className="login-container">
